@@ -1,0 +1,14 @@
+<ion-view view-title="通讯录">
+  <ion-content>
+    <ion-list>
+
+      <ion-item class="item-remove-animate item-avatar item-icon-right" ng-repeat="friend in friends | orderBy:'-time'" type="item-text-wrap" href="#/tab/chats/{{chat.id}}">
+        <img ng-src="{{friend.face}}">
+        <h2>{{friend.name}}</h2>
+        <p>{{friend.message}}</p>
+        <i class="icon ion-chevron-right icon-accessory"></i>
+
+      </ion-item>
+    </ion-list>
+  </ion-content>
+</ion-view>

@@ -1,4 +1,10 @@
 {
   "name": "myApp",
-  "app_id": ""
+  "app_id": "",
+  "proxies": [
+    {
+      "path": "/#/tab/account",
+      "proxyUrl": "http://localhost:8080/api"
+    }
+  ]
 }

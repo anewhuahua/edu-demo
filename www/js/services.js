@@ -1,50 +1,80 @@
 angular.module('starter.services', [])
 
-.factory('Chats', function() {
-  // Might use a resource here that returns a JSON array
+.factory('Profile', function($http) {
+  var name="";
+  var seed = function() {
+    return Math.floor((Math.random()*(99-10) + 10));
+  };
+  //var seed = Math.floor((Math.random()*(99-10) + 10));
+  //var seed = "12";
+  //var face = 'http://localhost:8080/ali-touxiang-0'+ seed + '.jpg'
+  var face = "";
+  var friends = [];
 
-  // Some fake testing data
-  var chats = [{
-    id: 0,
-    name: 'Ben Sparrow',
-    lastText: 'You on your way?',
-    face: 'https://pbs.twimg.com/profile_images/514549811765211136/9SgAuHeY.png'
-  }, {
-    id: 1,
-    name: 'Max Lynx',
-    lastText: 'Hey, it\'s me',
-    face: 'https://avatars3.githubusercontent.com/u/11214?v=3&s=460'
-  }, {
-    id: 2,
-    name: 'Andrew Jostlin',
-    lastText: 'Did you get the ice cream?',
-    face: 'https://pbs.twimg.com/profile_images/491274378181488640/Tti0fFVJ.jpeg'
-  }, {
-    id: 3,
-    name: 'Adam Bradleyson',
-    lastText: 'I should buy a boat',
-    face: 'https://pbs.twimg.com/profile_images/479090794058379264/84TKj_qa.jpeg'
-  }, {
-    id: 4,
-    name: 'Perry Governor',
-    lastText: 'Look at my mukluks!',
-    face: 'https://pbs.twimg.com/profile_images/491995398135767040/ie2Z_V6e.jpeg'
-  }];
-
-  return {
-    all: function() {
-      return chats;
-    },
-    remove: function(chat) {
-      chats.splice(chats.indexOf(chat), 1);
-    },
-    get: function(chatId) {
-      for (var i = 0; i < chats.length; i++) {
-        if (chats[i].id === parseInt(chatId)) {
-          return chats[i];
-        }
+  return  {
+    askProfile: function(n, cb){
+      // ask name
+      $http.get("http://localhost:8080/api/users/"+n)
+        .success(function(data) {
+          if(data && data.name){
+            console.log(data.name);
+            name = data.name;
+            face = 'http://localhost:8080/ali-touxiang-0'+ seed() + '.jpg'
+          } else {
+            console.log("can't find user");
+          }
+        })
+        .error(function(data) {
+          console.log("ERROR");
+        });
+      
+      if (name!=""){
+        cb();
       }
-      return null;
+    },
+    getFriends: function() {
+      if (name=="")console.log("no name found");
+      $http.get("http://localhost:8080/api/users/"+name+"/friends")
+        .success(function(data) {
+          if(data){
+            console.log(data.length);
+            //console.log(data);
+            for (var i=0;i<data.length;i++) {
+              //console.log(data[i].friend);
+              //console.log(name);
+              var friendName = data[i].friend;
+              $http.get("http://localhost:8080/api/chats/"+ name +"/"+ friendName +"/last")
+                .success(function(d){
+                  if(d) {
+                    console.log(d);
+                    friends.push({
+                      name:d.friend,
+                      face:'http://localhost:8080/ali-touxiang-0'+ seed() + '.jpg',
+                      message: d.message,
+                      time: d.time
+                    });
+                  }
+                });
+            }
+          } else {
+            return [];
+            console.log("can't find friends");
+          }
+        })
+        .error(function(data) {
+          console.log("ERROR");
+          return [];
+        });
+
+        //$http.get("http://localhost:8080/api/chats/"+ name + "/" + temp[i] + "/last")
+        //friends.push({name:data[i].friend, face:'http://localhost:8080/ali-touxiang-0'+ seed() + '.jpg'});
+        return friends;
+    },
+    getProfile: function() {
+      return {name: name, face: face};
     }
   };
 });
+
+
+
