@@ -2,7 +2,7 @@
   <ion-content>
     <ion-list>
 
-      <ion-item class="item-remove-animate item-avatar item-icon-right" ng-repeat="friend in friends | orderBy:'-time'" type="item-text-wrap" href="#/tab/chats/{{chat.id}}">
+      <ion-item class="item-remove-animate item-avatar item-icon-right" ng-repeat="friend in friends | orderBy:'-time'" type="item-text-wrap" href="#/tab/chats/{{friend.name}}">
         <img ng-src="{{friend.face}}">
         <h2>{{friend.name}}</h2>
         <p>{{friend.message}}</p>

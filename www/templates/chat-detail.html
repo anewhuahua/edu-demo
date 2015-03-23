@@ -5,10 +5,44 @@
   The Friends service returns an array of friend data
 -->
 <ion-view view-title="{{chat.name}}">
+   <ion-pane "class="messaging-view">
+    <ion-header-bar class="bar-calm">
+      <img ng-src="{{chat.face}}" style="width: 64px; height: 64px">
+    </ion-header-bar>
+
+    <ion-content class="content-stable"
+                 on-swipe-left="hideTime = false"
+                 on-swipe-right="hideTime = true">
+
+      <div ng-repeat="message in messages"
+           ng-class="{other: message.name!= myName}"
+           class="messages">
+
+        <div class="message" ng-class="{'slide-right': hideTime, '': !hideTime}">
+          <span>{{ message.text }}</span>
+        </div>
+
+        <div class="time" ng-class="{'slide-right': hideTime, '': !hideTime}">{{message.time}}</div>
+      </div>
+    </ion-content>
+
+    <ion-footer-bar keyboard-attach class="bar-stable item-input-inset">
+      <label class="item-input-wrapper">
+        <input type="text" placeholder="Type your message" on-return="sendMessage(); closeKeyboard()" ng-model="data.message" on-focus="inputUp()" on-blur="inputDown()" />
+      </label>
+      <button class="button button-clear" ng-click="sendMessage()">
+        Send
+      </button>
+    </ion-footer-bar>
+  </ion-pane>
+</ion-view>
+
+
+<!--
   <ion-content class="padding">
     <img ng-src="{{chat.face}}" style="width: 64px; height: 64px">
     <p>
       {{chat.lastText}}
     </p>
   </ion-content>
-</ion-view>
+-->

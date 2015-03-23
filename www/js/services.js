@@ -1,6 +1,7 @@
 angular.module('starter.services', [])
 
 .factory('Profile', function($http) {
+  var url="10.0.2.2";
   var name="";
   var seed = function() {
     return Math.floor((Math.random()*(99-10) + 10));
@@ -14,12 +15,12 @@ angular.module('starter.services', [])
   return  {
     askProfile: function(n, cb){
       // ask name
-      $http.get("http://localhost:8080/api/users/"+n)
+      $http.get("http://"+ url  + ":8080/api/users/"+n)
         .success(function(data) {
           if(data && data.name){
             console.log(data.name);
             name = data.name;
-            face = 'http://localhost:8080/ali-touxiang-0'+ seed() + '.jpg'
+            face = 'http://' + url +':8080/ali-touxiang-0'+ seed() + '.jpg'
           } else {
             console.log("can't find user");
           }
@@ -34,7 +35,7 @@ angular.module('starter.services', [])
     },
     getFriends: function() {
       if (name=="")console.log("no name found");
-      $http.get("http://localhost:8080/api/users/"+name+"/friends")
+      $http.get("http://" + url + ":8080/api/users/"+name+"/friends")
         .success(function(data) {
           if(data){
             console.log(data.length);
@@ -43,13 +44,13 @@ angular.module('starter.services', [])
               //console.log(data[i].friend);
               //console.log(name);
               var friendName = data[i].friend;
-              $http.get("http://localhost:8080/api/chats/"+ name +"/"+ friendName +"/last")
+              $http.get("http://" + url + ":8080/api/chats/"+ name +"/"+ friendName +"/last")
                 .success(function(d){
                   if(d) {
                     console.log(d);
                     friends.push({
                       name:d.friend,
-                      face:'http://localhost:8080/ali-touxiang-0'+ seed() + '.jpg',
+                      face:'http://' +  url + ':8080/ali-touxiang-0'+ seed() + '.jpg',
                       message: d.message,
                       time: d.time
                     });
