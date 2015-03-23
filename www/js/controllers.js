@@ -64,7 +64,7 @@ angular.module('starter.controllers', [])
 })
 */
 
-.controller('ChatDetailCtrl', function($scope, $timeout, $ionicScrollDelegate) {
+.controller('ChatDetailCtrl', function($scope, $timeout, $ionicScrollDelegate, Profile) {
 
   $scope.hideTime = true;
 

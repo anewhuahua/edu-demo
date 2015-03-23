@@ -1,7 +1,7 @@
 angular.module('starter.services', [])
 
 .factory('Profile', function($http) {
-  var url="10.0.2.2";
+  var url="localhost";
   var name="";
   var seed = function() {
     return Math.floor((Math.random()*(99-10) + 10));
