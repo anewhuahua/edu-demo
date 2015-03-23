@@ -73,7 +73,33 @@ angular.module('starter.services', [])
     },
     getProfile: function() {
       return {name: name, face: face};
+    },
+
+    getChats: function(n1, n2, cb) {
+      if (name=="")console.log("no name found");
+      $http.get("http://" + url + ":8080/api/chats/"+ n1 + "/" + n2)
+        .success(function(data) {
+          if(data) {
+            for (var i=0;i<data.length;i++){
+              cb(data[i]);
+            }
+          }
+        })
+        .error(function(data) {
+          console.log("ERROR");
+        });
+      $http.get("http://" + url + ":8080/api/chats/"+ n2 + "/" + n1)
+        .success(function(data) {
+          if(data) {
+            for (var i=0;i<data.length;i++){
+              cb(data[i]);
+            }
+          }
+        })
+        .error(function(data) {
+        });
     }
+
   };
 });
 

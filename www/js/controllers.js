@@ -3,10 +3,12 @@ angular.module('starter.controllers', [])
 .controller('DashCtrl', function($scope) {})
 
 .controller('ChatsCtrl', function($scope, Chats) {
+  /*
   $scope.chats = Chats.all();
   $scope.remove = function(chat) {
     Chats.remove(chat);
   }
+  */  
 })
 
 
@@ -64,22 +66,19 @@ angular.module('starter.controllers', [])
 })
 */
 
-.controller('ChatDetailCtrl', function($scope, $timeout, $ionicScrollDelegate, Profile) {
-
+.controller('ChatDetailCtrl', function($scope, $timeout, $ionicScrollDelegate, $stateParams, Profile) {
   $scope.hideTime = true;
+  $scope.myName = Profile.getProfile().name;
 
-  var alternate,
-      isIOS = ionic.Platform.isWebView() && ionic.Platform.isIOS();
+  var isIOS = ionic.Platform.isWebView() && ionic.Platform.isIOS();
 
   // send message function
   $scope.sendMessage = function() {
-    alternate = !alternate;
-
     var d = new Date();
     d = d.toLocaleTimeString().replace(/:\d+ /, ' ');
 
     $scope.messages.push({
-      userId: alternate ? '12345' : '54321',
+      name: $scope.myName,
       text: $scope.data.message,
       time: d
     });
@@ -105,9 +104,19 @@ angular.module('starter.controllers', [])
     // cordova.plugins.Keyboard.close();
   };
 
+  
   $scope.data = {};
-  $scope.myName = Profile.getProfile().name;
   $scope.messages = [];
+
+  var fname = $stateParams.friendName;
+
+  Profile.getChats($scope.myName, fname, function(data){
+    $scope.messages.push({
+      name: data.from,
+      text: data.message,
+      time: data.time 
+    });
+  });
 
 })
 

@@ -14,7 +14,7 @@
                  on-swipe-left="hideTime = false"
                  on-swipe-right="hideTime = true">
 
-      <div ng-repeat="message in messages"
+      <div ng-repeat="message in messages | orderBy:'time'"
            ng-class="{other: message.name!= myName}"
            class="messages">
 
