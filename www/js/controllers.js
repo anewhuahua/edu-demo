@@ -135,8 +135,6 @@ angular.module('starter.controllers', [])
 
   var fname = $stateParams.friendName;
 
-     
-  
   //Profile.socket.emit("join", fname);
   var room = Profile.getRoom();
   if (room!=""){
@@ -157,13 +155,12 @@ angular.module('starter.controllers', [])
 
 })
 
-
 .controller('AccountCtrl', function($scope,$state,Profile,socket) {
   $scope.signIn = function(user) {
-    console.log('Sign-In', user);
+    console.log('Sign-In', user.username);
     Profile.askProfile(user.username, function(){
       $state.go('tab.account-info');
-      socket.emit('join',user.username);
+      socket.emit('join', user.username);
     });
   };
 })

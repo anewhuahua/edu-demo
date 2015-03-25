@@ -2,7 +2,7 @@ angular.module('starter.services', ['btford.socket-io'])
 
 .factory('Profile', function($http) {
   var room="";
-  var url="10.0.2.2";
+  var url="115.28.11.51";
   var name="";
   var seed = function() {
     return Math.floor((Math.random()*(99-10) + 10));
@@ -113,7 +113,7 @@ angular.module('starter.services', ['btford.socket-io'])
 
 
 .factory('socket', function (socketFactory) {
-  var url="10.0.2.2";
+  var url="115.28.11.51";
   //console.log("tyson");
   var myIoSocket = io.connect('http://'+url+':3000');
   console.log(myIoSocket);
