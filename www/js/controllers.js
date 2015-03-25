@@ -15,7 +15,7 @@ angular.module('starter.controllers', [])
 .controller('FriendsCtrl', function($scope, Profile) {
   $scope.friends = Profile.getFriends();
   console.log($scope.friends);
-  //console.log($scope.friends);
+  
 })
 
 /*
@@ -66,7 +66,7 @@ angular.module('starter.controllers', [])
 })
 */
 
-.controller('ChatDetailCtrl', function($scope, $timeout, $ionicScrollDelegate, $stateParams, Profile) {
+.controller('ChatDetailCtrl', function($scope, $timeout, $ionicScrollDelegate, $stateParams, Profile, socket) {
   $scope.hideTime = true;
   $scope.myName = Profile.getProfile().name;
 
@@ -75,13 +75,21 @@ angular.module('starter.controllers', [])
   // send message function
   $scope.sendMessage = function() {
     var d = new Date();
-    d = d.toLocaleTimeString().replace(/:\d+ /, ' ');
+    //d = d.toLocaleTimeString().replace(/:\d+ /, ' ');
+    d = d.getTime();
 
     $scope.messages.push({
       name: $scope.myName,
       text: $scope.data.message,
       time: d
     });
+
+    var data ={
+      from: $scope.myName,
+      to: $stateParams.friendName,
+      message: $scope.data.message
+    };
+    socket.emit("chat", JSON.stringify(data));
 
     // clear input pane
     delete $scope.data.message;
@@ -104,28 +112,58 @@ angular.module('starter.controllers', [])
     // cordova.plugins.Keyboard.close();
   };
 
+  socket.on('chat', function (msg) {
+    var d = new Date();
+    d = d.getTime();
+    var data = JSON.parse(msg);
+    
+    if (data.to === $scope.myName) {
+      if(data.from === $stateParams.friendName){
+      $scope.messages.push({
+        name: data.from,
+        text: data.message,
+        time: d
+      });
+      $ionicScrollDelegate.scrollBottom(true);
+    }
+    }
+  });
+
   
   $scope.data = {};
   $scope.messages = [];
 
   var fname = $stateParams.friendName;
 
+     
+  
+  //Profile.socket.emit("join", fname);
+  var room = Profile.getRoom();
+  if (room!=""){
+    socket.emit("leave", room);
+  }
+  socket.emit("join", fname);
+  Profile.joinRoom(fname);
+  
   Profile.getChats($scope.myName, fname, function(data){
+    var d = new Date();
+    d = d.getTime();
     $scope.messages.push({
       name: data.from,
       text: data.message,
-      time: data.time 
+      time: d 
     });
   });
 
 })
 
 
-.controller('AccountCtrl', function($scope,$state,Profile) {
+.controller('AccountCtrl', function($scope,$state,Profile,socket) {
   $scope.signIn = function(user) {
     console.log('Sign-In', user);
     Profile.askProfile(user.username, function(){
       $state.go('tab.account-info');
+      socket.emit('join',user.username);
     });
   };
 })

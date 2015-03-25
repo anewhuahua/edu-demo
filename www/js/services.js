@@ -1,7 +1,8 @@
-angular.module('starter.services', [])
+angular.module('starter.services', ['btford.socket-io'])
 
 .factory('Profile', function($http) {
-  var url="localhost";
+  var room="";
+  var url="10.0.2.2";
   var name="";
   var seed = function() {
     return Math.floor((Math.random()*(99-10) + 10));
@@ -13,6 +14,12 @@ angular.module('starter.services', [])
   var friends = [];
 
   return  {
+    getRoom: function(){
+      return room;
+    },
+    joinRoom: function(r) {
+      room = r;
+    },
     askProfile: function(n, cb){
       // ask name
       $http.get("http://"+ url  + ":8080/api/users/"+n)
@@ -34,6 +41,7 @@ angular.module('starter.services', [])
       }
     },
     getFriends: function() {
+      friends = [];
       if (name=="")console.log("no name found");
       $http.get("http://" + url + ":8080/api/users/"+name+"/friends")
         .success(function(data) {
@@ -101,7 +109,16 @@ angular.module('starter.services', [])
     }
 
   };
+})
+
+
+.factory('socket', function (socketFactory) {
+  var url="10.0.2.2";
+  //console.log("tyson");
+  var myIoSocket = io.connect('http://'+url+':3000');
+  console.log(myIoSocket);
+  mySocket = socketFactory({
+    ioSocket: myIoSocket
+  });
+  return mySocket;
 });
-
-
-
