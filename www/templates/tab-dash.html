@@ -1,28 +1,35 @@
-<ion-view view-title="Dashboard">
-  <ion-content class="padding">
-    <div class="list card">
-      <div class="item item-divider">Recent Updates</div>
-      <div class="item item-body">
-        <div>
-          There is a fire in <b>sector 3</b>
-        </div>
-      </div>
+<ion-view title="在线名师">
+  <ion-content>
+
+    <label class="item item-input item-select">
+    <div class="input-label">
+      选择课程
     </div>
-    <div class="list card">
-      <div class="item item-divider">Health</div>
-      <div class="item item-body">
-        <div>
-          You ate an apple today!
-        </div>
-      </div>
-    </div>
-    <div class="list card">
-      <div class="item item-divider">Upcoming</div>
-      <div class="item item-body">
-        <div>
-          You have <b>29</b> meetings on your calendar tomorrow.
-        </div>
-      </div>
-    </div>
+<!--
+    <select>
+      <option>英语</option>
+      <option>数学</option>
+      <option>钢琴</option>
+    </select>
+-->
+
+
+    <select ng-model="optionSelected"
+            ng-options="opt as opt.label for opt in options">
+    </select>
+
+    </label>
+    
+
+     <ion-list>
+      <ion-item class="item-remove-animate item-avatar item-icon-right" ng-repeat="teacher in teachers|filter:{from: optionSelected.value}" type="item-text-wrap">
+        <img ng-src="{{teacher.face}}">
+        <h2>{{teacher.name}}</h2>
+      </ion-item>
+    </ion-list>
+
+
+
   </ion-content>
 </ion-view>
+

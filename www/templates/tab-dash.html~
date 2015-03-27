@@ -1,0 +1,19 @@
+<ion-view title="在线名师">
+  <ion-content>
+
+    <label class="item item-input item-select">
+    <div class="input-label">
+      选择课程
+    </div>
+
+    <select>
+      <option>英语</option>
+      <option>数学</option>
+      <option>钢琴</option>
+    </select>
+    </label>
+
+
+  </ion-content>
+</ion-view>
+

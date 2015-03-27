@@ -1,6 +1,38 @@
 angular.module('starter.controllers', [])
 
-.controller('DashCtrl', function($scope) {})
+.controller('DashCtrl', function($scope) {
+  
+
+  $scope.options = [
+    { label: '英语', value: 'english' },
+    { label: '数学', value: 'math' },
+    { label: '音乐', value: 'music' },
+  ];
+  $scope.optionSelected= { label: '英语', value: 'english' };
+  $scope.teachers = [{
+    name: 'tyson',
+    face: 'http://115.28.11.51:8080/ali-touxiang-030.jpg',
+    from: 'math'
+  },
+  {
+    name: 'looey',
+    face: 'http://115.28.11.51:8080/ali-touxiang-032.jpg',
+    from: 'english'
+  },
+  {
+    name: 'jackson',
+    face: 'http://115.28.11.51:8080/ali-touxiang-035.jpg',
+    from: 'english'
+  }];
+
+  $scope.filterFunc = function(e) {
+    return e.from== $scope.optionSelected.value;
+  }
+
+
+})
+
+
 
 .controller('ChatsCtrl', function($scope, Chats) {
   /*
@@ -13,8 +45,6 @@ angular.module('starter.controllers', [])
 
 
 .controller('FriendsCtrl', function($scope, $interval, Profile, socket) {
-
-
   socket.on('query', function (msg) {
     var data = JSON.parse(msg);
     for (var i=0;i<$scope.friends.length;i++){

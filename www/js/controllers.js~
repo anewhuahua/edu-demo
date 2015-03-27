@@ -1,6 +1,30 @@
 angular.module('starter.controllers', [])
 
-.controller('DashCtrl', function($scope) {})
+.controller('DashCtrl', function($scope) {
+  $scope.options = [
+    { label: '英语', value: 'english' },
+    { label: '数学', value: 'math' },
+    { label: '音乐', value: 'music' },
+  ];
+  
+  $scope.teachers = [{
+    name: 'tyson',
+    face: 'http://115.28.11.51:8080/ali-touxiang-030.jpg',
+    from: 'math'
+  },
+  {
+    name: 'looey',
+    face: 'http://115.28.11.51:8080/ali-touxiang-032.jpg',
+    from: 'english'
+  },
+  {
+    name: 'jackson',
+    face: 'http://115.28.11.51:8080/ali-touxiang-035.jpg',
+    from: 'music'
+  }];
+})
+
+
 
 .controller('ChatsCtrl', function($scope, Chats) {
   /*
@@ -13,8 +37,6 @@ angular.module('starter.controllers', [])
 
 
 .controller('FriendsCtrl', function($scope, $interval, Profile, socket) {
-
-
   socket.on('query', function (msg) {
     var data = JSON.parse(msg);
     for (var i=0;i<$scope.friends.length;i++){
@@ -22,10 +44,14 @@ angular.module('starter.controllers', [])
         if(data.live=="false"){
           $scope.friends[i].offline=false;
           $scope.friends[i].face='http://115.28.11.51:8080/lightgray.jpg';
+          //$scope.friends[i].name.replace(/(在线)/,'');
           console.log("not found");
         } else {
+          var facenum = $scope.friends[i].time%50+11;
           $scope.friends[i].offline=true;
-          $scope.friends[i].name+='(在线)';
+          $scope.friends[i].face='http://115.28.11.51:8080/ali-touxiang-0' + facenum + '.jpg';
+          console.log($scope.friends[i].face);
+          //$scope.friends[i].name+='(在线)';
           console.log("found");
         }
       }
