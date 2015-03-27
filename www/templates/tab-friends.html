@@ -3,7 +3,7 @@
     <ion-list>
 
       <ion-item class="item-remove-animate item-avatar item-icon-right" ng-repeat="friend in friends | orderBy:'-time'" type="item-text-wrap" href="#/tab/chats/{{friend.name}}">
-        <img ng-src="{{friend.face}}">
+        <img ng-src="{{friend.face}}" ng-class="{'offline': !friend.offline}">
         <h2>{{friend.name}}</h2>
         <p ng-class="{'offline': !friend.offline}">{{friend.message}}</p>
         <i class="icon ion-chevron-right icon-accessory"></i>

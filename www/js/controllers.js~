@@ -22,14 +22,10 @@ angular.module('starter.controllers', [])
         if(data.live=="false"){
           $scope.friends[i].offline=false;
           $scope.friends[i].face='http://115.28.11.51:8080/lightgray.jpg';
-          //$scope.friends[i].name.replace(/(在线)/,'');
           console.log("not found");
         } else {
-          var facenum = $scope.friends[i].time%50+11;
           $scope.friends[i].offline=true;
-          $scope.friends[i].face='http://115.28.11.51:8080/ali-touxiang-0' + facenum + '.jpg';
-          console.log($scope.friends[i].face);
-          //$scope.friends[i].name+='(在线)';
+          $scope.friends[i].name+='(在线)';
           console.log("found");
         }
       }

@@ -1,233 +1,100 @@
-<html ng-app="ionicApp">
+angular.module('ionicApp', ['ionic'])
 
+.config(function($stateProvider, $urlRouterProvider) {
+
+  $stateProvider
+    .state('eventmenu', {
+      url: "/event",
+      abstract: true,
+      templateUrl: "event-menu.html"
+    })
+    .state('eventmenu.home', {
+      url: "/home",
+      views: {
+        'menuContent' :{
+          templateUrl: "home.html"
+        }
+      }
+    })
+  
+  $urlRouterProvider.otherwise("/event/home");
+})
+
+.controller('MainCtrl', function($scope, $ionicSideMenuDelegate) {
+  $scope.toggleLeft = function() {
+    $ionicSideMenuDelegate.$getByHandle('mainMenu').toggleLeft();
+  };
+  $scope.toggleMySecondMenuLeft = function() {
+    $ionicSideMenuDelegate.$getByHandle('mySecondMenu').toggleLeft();
+  };
+  
+});
+
+
+
+<html ng-app="ionicApp">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+    
+    <title>Ionic Side Menu Delegation</title>
 
-    <title>Ionic Template</title>
-
-    <link href="//code.ionicframework.com/nightly/css/ionic.css" rel="stylesheet">
-    <script src="//code.ionicframework.com/nightly/js/ionic.bundle.js"></script>
+    <link href="http://code.ionicframework.com/1.0.0-beta.4/css/ionic.css" rel="stylesheet">
+    <script src="http://code.ionicframework.com/1.0.0-beta.4/js/ionic.bundle.js"></script>
   </head>
-
-  <body ng-controller="Messages">
-    <ion-pane "class="messaging-view">
-    <ion-header-bar class="bar-calm">
-      <h1 class="title">Ioinc Chat</h1>
-    </ion-header-bar>
-
-    <ion-content class="content-stable"
-                 on-swipe-left="hideTime = false"
-                 on-swipe-right="hideTime = true">
-      <div ng-repeat="message in messages"
-           ng-class="{other: message.userId != myId}"
-           class="messages">
-
-        <div class="message" ng-class="{'slide-right': hideTime, '': !hideTime}">
-          <span>{{ message.text }}</span>
-        </div>
-        <div class="time" ng-class="{'slide-right': hideTime, '': !hideTime}">{{message.time}}</div>
-
-      </div>
-    </ion-content>
-
-    <ion-footer-bar keyboard-attach class="bar-stable item-input-inset">
-      <label class="item-input-wrapper">
-        <input type="text" placeholder="Type your message" on-return="sendMessage(); closeKeyboard()" ng-model="data.message" on-focus="inputUp()" on-blur="inputDown()" />
-      </label>
-      <button class="button button-clear" ng-click="sendMessage()">
-        Send
-      </button>
-    </ion-footer-bar>
-  </ion-pane>
+ 
+  <body>
+    
+    <div ng-controller="MainCtrl">       
+      <ion-nav-view></ion-nav-view>
+    </div>
+    
+    <script id="event-menu.html" type="text/ng-template">
+      <ion-side-menus  delegate-handle="mainMenu">
+        
+        <ion-side-menu-content>
+          <ion-nav-bar class="bar-positive">
+            <ion-nav-back-button class="button-icon ion-arrow-left-c">
+            </ion-nav-back-button>
+          </ion-nav-bar>
+          <ion-nav-buttons side="left">
+            <button class="button button-icon button-clear ion-navicon" ng-click="toggleLeft()"> Toggle my first menu
+            </button>
+          </ion-nav-buttons>
+          <ion-nav-view name="menuContent"></ion-nav-view>
+        </ion-side-menu-content> 
+        
+        <ion-side-menu side="left">
+          <ion-header-bar class="bar-assertive">
+            <h1 class="title">Left Menu</h1>
+          </ion-header-bar>
+          <ion-content>
+            <ul class="list">
+              <a href="#/event/check-in" class="item">Check-in</a>
+              <a href="#/event/attendees" class="item">Attendees</a>
+            </ul>
+          </ion-content>
+        </ion-side-menu>
+        
+      </ion-side-menus>
+    </script>
+    
+    <script id="home.html" type="text/ng-template">
+      <ion-view title="Welcome">
+        <ion-content padding="true" class="padding">
+          <ion-side-menus delegate-handle="mySecondMenu">
+            <ion-side-menu-content>
+              <button class="button ion-navicon button-positive" ng-click="toggleMySecondMenuLeft()">
+                Toggle My second Left Side Menu
+              </button>
+              <p>Swipe to the right to reveal the left menu.</p>
+              <p>(On desktop click and drag from left to right)</p>
+            </ion-side-menu-content>
+            <ion-side-menu side="left">
+              My second Left Menu!
+          <ion-side-menu>
+        </ion-content>
+      </ion-view>
+    </script>    
   </body>
-
 </html>
-
-
-
-
-
-
-
-
-$stable:                          #f8f8f8 !default;
-
-.scroll {
-  padding: 10px 0 50px !important;
-}
-.messages {
-  display: -webkit-box !important;
-  display: -moz-box !important;
-  display: -ms-flexbox !important;
-  display: -webkit-flex !important;
-  display: flex !important;
-  -webkit-align-content: center !important;
-  -ms-flex-line-pack: center !important;
-  align-content: center !important;
-  -webkit-box-align: center !important;
-  -moz-box-align: center !important;
-  -webkit-align-items: center !important;
-  -ms-flex-align: center !important;
-  align-items: center !important;
-  margin-bottom: 20px !important;
-  .message {
-    -webkit-box-flex: 1 !important;
-    -moz-box-flex: 1 !important;
-    -webkit-flex: 1 1 auto !important;
-    -ms-flex: 1 1 auto !important;
-    flex: 1 1 auto !important;
-    padding: 10px !important;
-    -webkit-transition: all 250ms ease-in-out !important;
-    transition: all 250ms ease-in-out !important;
-    overflow: hidden !important;
-    text-align: left !important;
-    -webkit-transform: translate3d(0, 0, 0) !important;
-    -moz-transform: translate3d(0, 0, 0) !important;
-    transform: translate3d(0, 0, 0) !important;
-  }
-}
-.time {
-  -webkit-box-flex: 0 !important;
-  -moz-box-flex: 0 !important;
-  -webkit-flex: 0 1 auto !important;
-  -ms-flex: 0 1 auto !important;
-  flex: 0 1 auto !important;
-  -webkit-align-self: auto !important;
-  -ms-flex-item-align: auto !important;
-  align-self: auto !important;
-  width: 120px !important;
-  text-align: center !important;
-  padding: 0 0 0 0 !important;
-  -webkit-transition: all 250ms ease-in-out !important;
-  transition: all 250ms ease-in-out !important;
-  -webkit-transform: translate3d(10px, 0, 0) !important;
-  -moz-transform: translate3d(10px, 0, 0) !important;
-  transform: translate3d(10px, 0, 0) !important;
-  &.slide-right {
-    -webkit-transform: translate3d(130px, 0, 0) !important;
-    -moz-transform: translate3d(130px, 0, 0) !important;
-    transform: translate3d(130px, 0, 0) !important;
-  }
-}
-//This will change
-.messages.other {
-  .message {
-    -webkit-transform: translate3d(0, 0, 0) !important;
-    -moz-transform: translate3d(0, 0, 0) !important;
-    transform: translate3d(0, 0, 0) !important;
-    text-align: right !important;
-  }
-  .message.slide-right {
-    -webkit-transform: translate3d(120px, 0, 0) !important;
-    -moz-transform: translate3d(120px, 0, 0) !important;
-    transform: translate3d(120px, 0, 0) !important;
-  }
-  span {
-    color: black !important;
-    background-color: #C7C7CC !important;
-  }
-}
-span {
-  background: #007AFF !important;
-  display: inline-block !important;
-  color: white !important;
-  padding: 10px !important;
-  border-radius: 10px !important;
-  text-align: left !important;
-  max-width: 240px !important;
-}
-
-
-
-angular.module('ionicApp', ['ionic'])
-
-// All this does is allow the message
-// to be sent when you tap return
-.directive('input', function($timeout) {
-  return {
-    restrict: 'E',
-    scope: {
-      'returnClose': '=',
-      'onReturn': '&',
-      'onFocus': '&',
-      'onBlur': '&'
-    },
-    link: function(scope, element, attr) {
-      element.bind('focus', function(e) {
-        if (scope.onFocus) {
-          $timeout(function() {
-            scope.onFocus();
-          });
-        }
-      });
-      element.bind('blur', function(e) {
-        if (scope.onBlur) {
-          $timeout(function() {
-            scope.onBlur();
-          });
-        }
-      });
-      element.bind('keydown', function(e) {
-        if (e.which == 13) {
-          if (scope.returnClose) element[0].blur();
-          if (scope.onReturn) {
-            $timeout(function() {
-              scope.onReturn();
-            });
-          }
-        }
-      });
-    }
-  }
-})
-
-
-.controller('Messages', function($scope, $timeout, $ionicScrollDelegate) {
-
-  $scope.hideTime = true;
-
-  var alternate,
-    isIOS = ionic.Platform.isWebView() && ionic.Platform.isIOS();
-
-  $scope.sendMessage = function() {
-    alternate = !alternate;
-
-    var d = new Date();
-  d = d.toLocaleTimeString().replace(/:\d+ /, ' ');
-
-    $scope.messages.push({
-      userId: alternate ? '12345' : '54321',
-      text: $scope.data.message,
-      time: d
-    });
-
-    delete $scope.data.message;
-    $ionicScrollDelegate.scrollBottom(true);
-
-  };
-
-
-  $scope.inputUp = function() {
-    if (isIOS) $scope.data.keyboardHeight = 216;
-    $timeout(function() {
-      $ionicScrollDelegate.scrollBottom(true);
-    }, 300);
-
-  };
-
-  $scope.inputDown = function() {
-    if (isIOS) $scope.data.keyboardHeight = 0;
-    $ionicScrollDelegate.resize();
-  };
-
-  $scope.closeKeyboard = function() {
-    // cordova.plugins.Keyboard.close();
-  };
-
-
-  $scope.data = {};
-  $scope.myId = '12345';
-  $scope.messages = [];
-
-});
