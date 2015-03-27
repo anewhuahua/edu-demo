@@ -1,8 +1,9 @@
 angular.module('starter.services', ['btford.socket-io'])
 
-.factory('Profile', function($http) {
+.factory('Profile', function($http, socket) {
   var room="";
   var url="115.28.11.51";
+  //var url="10.0.2.2";
   var name="";
   var seed = function() {
     return Math.floor((Math.random()*(99-10) + 10));
@@ -47,27 +48,44 @@ angular.module('starter.services', ['btford.socket-io'])
         .success(function(data) {
           if(data){
             console.log(data.length);
-            //console.log(data);
+            console.log(data);
             for (var i=0;i<data.length;i++) {
               //console.log(data[i].friend);
               //console.log(name);
               var friendName = data[i].friend;
+            
+              var fr = {
+                name: friendName,  
+                face:'http://' +  url + ':8080/ali-touxiang-0'+ seed() + '.jpg',
+                time: 0
+              };
+              console.log(friendName);
               $http.get("http://" + url + ":8080/api/chats/"+ name +"/"+ friendName +"/last")
                 .success(function(d){
+                  console.log(d);
                   if(d) {
-                    console.log(d);
+                    console.log(d.friend);
+                    for (var j=0;j<friends.length;j++){
+                      var tfr = friends[j];
+                      if(tfr.name == d.friend) {
+                        tfr.message = d.message;
+                        tfr.time = d.time;
+                      }
+                    }
+                    /* 
                     friends.push({
                       name:d.friend,
                       face:'http://' +  url + ':8080/ali-touxiang-0'+ seed() + '.jpg',
                       message: d.message,
                       time: d.time
-                    });
+                    });*/
                   }
                 });
+              friends.push(fr);
             }
           } else {
-            return [];
             console.log("can't find friends");
+            return [];
           }
         })
         .error(function(data) {
@@ -114,6 +132,7 @@ angular.module('starter.services', ['btford.socket-io'])
 
 .factory('socket', function (socketFactory) {
   var url="115.28.11.51";
+  //var url="10.0.2.2";
   //console.log("tyson");
   var myIoSocket = io.connect('http://'+url+':3000');
   console.log(myIoSocket);

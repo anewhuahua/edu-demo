@@ -12,10 +12,33 @@ angular.module('starter.controllers', [])
 })
 
 
-.controller('FriendsCtrl', function($scope, Profile) {
+.controller('FriendsCtrl', function($scope, $interval, Profile, socket) {
+
+
+  socket.on('query', function (msg) {
+    var data = JSON.parse(msg);
+    for (var i=0;i<$scope.friends.length;i++){
+      if($scope.friends[i].name == data.name){
+        if(data.live=="false"){
+          $scope.friends[i].offline=false;
+          console.log("not found");
+        } else {
+          $scope.friends[i].offline=true;
+          console.log("found");
+        }
+      }
+    }
+  });
+
+  $interval( function(){ 
+    for (var i=0;i<$scope.friends.length;i++){
+        socket.emit("query", $scope.friends[i].name)   
+        console.log("hello tyson");
+    } 
+   }, 1500);
+
   $scope.friends = Profile.getFriends();
   console.log($scope.friends);
-  
 })
 
 /*
@@ -66,7 +89,7 @@ angular.module('starter.controllers', [])
 })
 */
 
-.controller('ChatDetailCtrl', function($scope, $timeout, $ionicScrollDelegate, $stateParams, Profile, socket) {
+.controller('ChatDetailCtrl', function($scope, $timeout, $ionicScrollDelegate, $stateParams, Profile, socket,$http) {
   $scope.hideTime = true;
   $scope.myName = Profile.getProfile().name;
 
@@ -74,6 +97,7 @@ angular.module('starter.controllers', [])
 
   // send message function
   $scope.sendMessage = function() {
+    if ($scope.data.message && $scope.data.message!=""){
     var d = new Date();
     //d = d.toLocaleTimeString().replace(/:\d+ /, ' ');
     d = d.getTime();
@@ -91,9 +115,26 @@ angular.module('starter.controllers', [])
     };
     socket.emit("chat", JSON.stringify(data));
 
+    var req = {
+      method: 'POST',
+      url: 'http://115.28.11.51:8080/api/chats/'+$scope.myName+'/'+$stateParams.friendName+'/',
+      headers: {
+        'Content-Type':'application/json' 
+      },
+      data: { "chats": [$scope.data.message] }
+    }
+    $http(req)
+     .success(function(){
+        console.log("tyson chat insert okay"); 
+     })
+     .error(function(){
+        console.log("tyson chat insert error");
+     });
+    
     // clear input pane
     delete $scope.data.message;
     $ionicScrollDelegate.scrollBottom(true);
+    }
   };
 
   $scope.inputUp = function() {
@@ -144,7 +185,7 @@ angular.module('starter.controllers', [])
   Profile.joinRoom(fname);
   
   Profile.getChats($scope.myName, fname, function(data){
-    var d = new Date();
+    d = new Date(data.time);
     d = d.getTime();
     $scope.messages.push({
       name: data.from,
@@ -152,6 +193,10 @@ angular.module('starter.controllers', [])
       time: d 
     });
   });
+
+  $timeout(function() {
+      $ionicScrollDelegate.scrollBottom(true);
+  }, 700);
 
 })
 
@@ -161,6 +206,7 @@ angular.module('starter.controllers', [])
     Profile.askProfile(user.username, function(){
       $state.go('tab.account-info');
       socket.emit('join', user.username);
+      socket.emit('login', user.username);
     });
   };
 })
