@@ -10,24 +10,31 @@ angular.module('starter.controllers', [])
   ];
   $scope.optionSelected= { label: '英语', value: 'english' };
   $scope.teachers = [{
-    name: 'tyson',
+    name: '丁老师',
     face: 'http://115.28.11.51:8080/ali-touxiang-030.jpg',
     from: 'math'
   },
   {
-    name: 'looey',
+    name: '王老师',
     face: 'http://115.28.11.51:8080/ali-touxiang-032.jpg',
     from: 'english'
   },
   {
-    name: 'jackson',
+    name: '邵老师',
+    face: 'http://115.28.11.51:8080/ali-touxiang-032.jpg',
+    from: 'music'
+  },
+  {
+    name: '沈老师',
+    face: 'http://115.28.11.51:8080/ali-touxiang-032.jpg',
+    from: 'english'
+  },
+  {
+    name: '俞老师',
     face: 'http://115.28.11.51:8080/ali-touxiang-035.jpg',
     from: 'english'
   }];
 
-  $scope.filterFunc = function(e) {
-    return e.from== $scope.optionSelected.value;
-  }
 
 
 })
@@ -127,6 +134,9 @@ angular.module('starter.controllers', [])
 */
 
 .controller('ChatDetailCtrl', function($scope, $timeout, $ionicScrollDelegate, $stateParams, Profile, socket,$http) {
+
+  if($stateParams.friendName){
+
   $scope.hideTime = true;
   $scope.myName = Profile.getProfile().name;
 
@@ -234,7 +244,7 @@ angular.module('starter.controllers', [])
   $timeout(function() {
       $ionicScrollDelegate.scrollBottom(true);
   }, 700);
-
+  }
 })
 
 .controller('AccountCtrl', function($scope,$state,Profile,socket) {

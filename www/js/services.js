@@ -28,6 +28,7 @@ angular.module('starter.services', ['btford.socket-io'])
           if(data && data.name){
             console.log(data.name);
             name = data.name;
+            //face = 'http://' + url +':8080/lightgray.jpg';
             face = 'http://' + url +':8080/ali-touxiang-0'+ seed() + '.jpg'
           } else {
             console.log("can't find user");
@@ -56,7 +57,7 @@ angular.module('starter.services', ['btford.socket-io'])
             
               var fr = {
                 name: friendName,  
-                face:'http://' +  url + ':8080/ali-touxiang-0'+ seed() + '.jpg',
+                face:'http://' +  url + ':8080/lightgray.jpg',
                 time: 0
               };
               console.log(friendName);
